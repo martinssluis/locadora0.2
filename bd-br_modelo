@@ -1,0 +1,222 @@
+/* Lógico_1: */
+
+CREATE TABLE Categoria (
+    id_categoria INTEGER PRIMARY KEY,
+    nome_categoria VARCHAR
+);
+
+CREATE TABLE Cliente (
+    telefone_cliente CHAR,
+    id_cliente INTEGER PRIMARY KEY,
+    nome_cliente VARCHAR,
+    data_registro_cliente DATE,
+    cpf VARCHAR
+);
+
+CREATE TABLE Departamento (
+    id_departamento INTEGER PRIMARY KEY,
+    nome_departamento VARCHAR
+);
+
+CREATE TABLE Feedback (
+    id_feedback INTEGER PRIMARY KEY,
+    nota_feedback VARCHAR,
+    fk_Cliente_id_cliente INTEGER
+);
+
+CREATE TABLE Funcionario (
+    id_funcionario INTEGER,
+    nome_funcionario VARCHAR,
+    data_contratacao_funcionario DATE,
+    telefone_funcionario VARCHAR,
+    cpf VARCHAR,
+    fk_Departamento_id_departamento INTEGER,
+    chefe BOOLEAN,
+    id_salario INTEGER,
+    valor_salario NUMERIC,
+    data_pagamento_salario DATE,
+    PRIMARY KEY (id_funcionario, id_salario)
+);
+
+CREATE TABLE Marca (
+    id_marca INTEGER PRIMARY KEY
+);
+
+CREATE TABLE Modelo (
+    id_modelo INTEGER PRIMARY KEY,
+    nome_modelo VARCHAR,
+    fk_Marca_id_marca INTEGER,
+    fk_Categoria_id_categoria INTEGER
+);
+
+CREATE TABLE Veiculo (
+    id_veiculo INTEGER PRIMARY KEY,
+    placa_veiculo VARCHAR,
+    chassi VARCHAR,
+    ano_fabricacao DATE,
+    ano_modelo DATE,
+    fk_Modelo_id_modelo INTEGER,
+    fk_Status_Veiculo_codigo INTEGER
+);
+
+CREATE TABLE Seguro (
+    id_seguro INTEGER PRIMARY KEY,
+    descricao VARCHAR,
+    fk_Veiculo_id_veiculo INTEGER,
+    fk_Status_Seguro_codigo INTEGER,
+    fk_Tipo_do_Seguro_codigo INTEGER
+);
+
+CREATE TABLE Status_do_Alugeul (
+    codigo INTEGER PRIMARY KEY,
+    descricao VARCHAR
+);
+
+CREATE TABLE Status_Veiculo (
+    codigo INTEGER PRIMARY KEY,
+    descricao VARCHAR
+);
+
+CREATE TABLE Status_Seguro (
+    codigo INTEGER PRIMARY KEY,
+    descricao VARCHAR
+);
+
+CREATE TABLE cargo (
+    codigo INTEGER PRIMARY KEY,
+    nome VARCHAR
+);
+
+CREATE TABLE Tipo_do_Seguro (
+    codigo INTEGER PRIMARY KEY,
+    descricao VARCHAR
+);
+
+CREATE TABLE Tipo_de_Aluguel (
+    codigo INTEGER PRIMARY KEY,
+    descricao VARCHAR,
+    nome VARCHAR
+);
+
+CREATE TABLE Ferias (
+    id_ferias INTEGER PRIMARY KEY,
+    dt_inicio DATE,
+    dt_fim DATE,
+    fk_Funcionario_Salario_id_funcionario INTEGER,
+    fk_Funcionario_Salario_id_salario INTEGER
+);
+
+CREATE TABLE Aluguel_aluga_Cliente_Veiculo_Funcionario_Salario (
+    id_aluguel INTEGER PRIMARY KEY,
+    data_inicio DATE,
+    valor NUMERIC,
+    fk_Status_do_Alugeul_codigo INTEGER,
+    fk_Tipo_de_Aluguel_codigo INTEGER,
+    fk_Cliente_id_cliente INTEGER,
+    fk_Veiculo_id_veiculo INTEGER,
+    fk_Funcionario_Salario_id_funcionario INTEGER,
+    fk_Funcionario_Salario_id_salario INTEGER
+);
+
+CREATE TABLE Relacionamento_1 (
+    fk_Funcionario_Salario_id_funcionario INTEGER,
+    fk_Cliente_id_cliente INTEGER
+);
+
+CREATE TABLE possui (
+    fk_cargo_codigo INTEGER,
+    fk_Funcionario_Salario_id_funcionario INTEGER,
+    fk_Funcionario_Salario_id_salario INTEGER
+);
+ 
+ALTER TABLE Feedback ADD CONSTRAINT FK_Feedback_2
+    FOREIGN KEY (fk_Cliente_id_cliente)
+    REFERENCES Cliente (id_cliente)
+    ON DELETE CASCADE;
+ 
+ALTER TABLE Funcionario ADD CONSTRAINT FK_Funcionario_2
+    FOREIGN KEY (fk_Departamento_id_departamento)
+    REFERENCES Departamento (id_departamento)
+    ON DELETE RESTRICT;
+ 
+ALTER TABLE Modelo ADD CONSTRAINT FK_Modelo_2
+    FOREIGN KEY (fk_Marca_id_marca)
+    REFERENCES Marca (id_marca)
+    ON DELETE RESTRICT;
+ 
+ALTER TABLE Modelo ADD CONSTRAINT FK_Modelo_3
+    FOREIGN KEY (fk_Categoria_id_categoria)
+    REFERENCES Categoria (id_categoria)
+    ON DELETE CASCADE;
+ 
+ALTER TABLE Veiculo ADD CONSTRAINT FK_Veiculo_2
+    FOREIGN KEY (fk_Modelo_id_modelo)
+    REFERENCES Modelo (id_modelo)
+    ON DELETE RESTRICT;
+ 
+ALTER TABLE Veiculo ADD CONSTRAINT FK_Veiculo_3
+    FOREIGN KEY (fk_Status_Veiculo_codigo)
+    REFERENCES Status_Veiculo (codigo)
+    ON DELETE CASCADE;
+ 
+ALTER TABLE Seguro ADD CONSTRAINT FK_Seguro_2
+    FOREIGN KEY (fk_Veiculo_id_veiculo)
+    REFERENCES Veiculo (id_veiculo)
+    ON DELETE CASCADE;
+ 
+ALTER TABLE Seguro ADD CONSTRAINT FK_Seguro_3
+    FOREIGN KEY (fk_Status_Seguro_codigo)
+    REFERENCES Status_Seguro (codigo)
+    ON DELETE CASCADE;
+ 
+ALTER TABLE Seguro ADD CONSTRAINT FK_Seguro_4
+    FOREIGN KEY (fk_Tipo_do_Seguro_codigo)
+    REFERENCES Tipo_do_Seguro (codigo)
+    ON DELETE CASCADE;
+ 
+ALTER TABLE Ferias ADD CONSTRAINT FK_Ferias_2
+    FOREIGN KEY (fk_Funcionario_Salario_id_funcionario, fk_Funcionario_Salario_id_salario)
+    REFERENCES Funcionario (id_funcionario, id_salario)
+    ON DELETE CASCADE;
+ 
+ALTER TABLE Aluguel_aluga_Cliente_Veiculo_Funcionario_Salario ADD CONSTRAINT FK_Aluguel_aluga_Cliente_Veiculo_Funcionario_Salario_2
+    FOREIGN KEY (fk_Status_do_Alugeul_codigo)
+    REFERENCES Status_do_Alugeul (codigo)
+    ON DELETE CASCADE;
+ 
+ALTER TABLE Aluguel_aluga_Cliente_Veiculo_Funcionario_Salario ADD CONSTRAINT FK_Aluguel_aluga_Cliente_Veiculo_Funcionario_Salario_3
+    FOREIGN KEY (fk_Tipo_de_Aluguel_codigo)
+    REFERENCES Tipo_de_Aluguel (codigo)
+    ON DELETE CASCADE;
+ 
+ALTER TABLE Aluguel_aluga_Cliente_Veiculo_Funcionario_Salario ADD CONSTRAINT FK_Aluguel_aluga_Cliente_Veiculo_Funcionario_Salario_4
+    FOREIGN KEY (fk_Cliente_id_cliente)
+    REFERENCES Cliente (id_cliente);
+ 
+ALTER TABLE Aluguel_aluga_Cliente_Veiculo_Funcionario_Salario ADD CONSTRAINT FK_Aluguel_aluga_Cliente_Veiculo_Funcionario_Salario_5
+    FOREIGN KEY (fk_Veiculo_id_veiculo)
+    REFERENCES Veiculo (id_veiculo);
+ 
+ALTER TABLE Aluguel_aluga_Cliente_Veiculo_Funcionario_Salario ADD CONSTRAINT FK_Aluguel_aluga_Cliente_Veiculo_Funcionario_Salario_6
+    FOREIGN KEY (fk_Funcionario_Salario_id_funcionario, fk_Funcionario_Salario_id_salario)
+    REFERENCES Funcionario (id_funcionario, id_salario);
+ 
+ALTER TABLE Relacionamento_1 ADD CONSTRAINT FK_Relacionamento_1_1
+    FOREIGN KEY (fk_Funcionario_Salario_id_funcionario, ???)
+    REFERENCES Funcionario (id_funcionario, ???)
+    ON DELETE SET NULL;
+ 
+ALTER TABLE Relacionamento_1 ADD CONSTRAINT FK_Relacionamento_1_2
+    FOREIGN KEY (fk_Cliente_id_cliente)
+    REFERENCES Cliente (id_cliente)
+    ON DELETE SET NULL;
+ 
+ALTER TABLE possui ADD CONSTRAINT FK_possui_1
+    FOREIGN KEY (fk_cargo_codigo)
+    REFERENCES cargo (codigo)
+    ON DELETE SET NULL;
+ 
+ALTER TABLE possui ADD CONSTRAINT FK_possui_2
+    FOREIGN KEY (fk_Funcionario_Salario_id_funcionario, fk_Funcionario_Salario_id_salario)
+    REFERENCES Funcionario (id_funcionario, id_salario)
+    ON DELETE SET NULL;
